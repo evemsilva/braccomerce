@@ -18,15 +18,15 @@ public class CategoryService {
 
     @Autowired private CategoryRepository repo;
 
-    public Category insert(Category obj) {
-	obj.setId(null);
-	return repo.save(obj);
+    public Category insert(Category category) {
+	category.setId(null);
+	return repo.save(category);
     }
 
-    public Category update(Category obj) {
-	Category newObj = findById(obj.getId());
-	updateData(newObj, obj);
-	return repo.save(newObj);
+    public Category update(Category category) {
+	Category categorySaved = findById(category.getId());
+	categorySaved.setName(category.getName());
+	return repo.save(categorySaved);
     }
 
     public List<Category> findAll() {
@@ -39,8 +39,8 @@ public class CategoryService {
     }
 
     public Category findById(Integer id) {
-	Optional<Category> obj = repo.findById(id);
-	return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! Id: " + id + ", Tipo: " + Category.class.getName()));
+	Optional<Category> categoryOptional = repo.findById(id);
+	return categoryOptional.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! Id: " + id + ", Tipo: " + Category.class.getName()));
     }
 
     public void delete(Integer id) {
@@ -49,10 +49,6 @@ public class CategoryService {
 	} catch (DataIntegrityViolationException e) {
 	    throw new DataIntegrityException("Nao eh possivel excluir uma categoria que possui um produto", e);
 	}
-    }
-
-    private void updateData(Category newObj, Category obj) {
-	newObj.setName(obj.getName());
     }
 
 }
